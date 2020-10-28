@@ -1,0 +1,141 @@
+<!-- Webpage for Muddy Paws Adventure Gear - Shopping Cart - Phil Gase -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Muddy Paws Adventure Gear Shopping Cart Page</title>
+        <meta charset='utf-8'/>
+        <link href='./style.css' rel='stylesheet' type='text/css'>
+        <!-- Add Link to JS Here -->
+    </head>
+    <body>
+        <header>
+            <!-- Navigation Bar -->
+            <nav>
+                <div class='logo'>
+                    <a href='./home.html'>
+                        <img  class='logo-image' src='./images/paw-icon.svg'>
+                        <span class='all-caps logo-title'>Muddy Paws<br>Adventure Gear</span>
+                    </a>
+                </div>
+                <ul class='nav-links'>
+                    <li>
+                        <a href=''>
+                            <img class='link-icon' src='./images/sign-in-icon.svg'>
+                            <span class='link-text'>Sign In</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href=''>
+                            <img class='link-icon' src='./images/about-icon.svg'>
+                            <span class='link-text'>About</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href='./products.html'>
+                            <img class='link-icon' src='./images/products-icon small.svg'>
+                            <span class='link-text'>Products</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href=''>
+                            <img class='link-icon' src='./images/shopping-cart-icon small.svg'>
+                            <span class='link-text'>Cart</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav> 
+        </header>
+
+        <main>
+            <!-- Page Intro Section -->
+            <section class='page-title'>
+                <h1>Your Shopping Cart</h1>
+            </section>
+
+            <!-- Content Section -->
+            <section class='page-content'>
+                <div class='page-subcontent'>
+                    <div class='feature'>
+                        <h2 class='all-caps'>Featured Product</h2>
+                        <div class='product-details'>
+                            <div class='product-description'>
+                                <a href='./gps_collar.html'>
+                                    <!-- <h3>Collar with GPS Tracker</h3> -->
+                                    <img id='feature-image' src='./images/collar.png' alt='Tan Leather Collar for Pet'>
+                                    <!-- <img class='rating' src='./images/4andhalf-star-rating.svg' alt='4.5 Star Rating'> -->
+                                </a>
+                            </div>
+                            <div class='product-options'>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <figure>
+                                                <img src='./images/dog-icon.svg'> 
+                                                <figcaption>Dog</figcaption>
+                                            </figure>
+                                        </td>
+                                        <td></td> <!-- Blank Column -->
+                                        <td></td> <!-- Blank Column -->
+                                        <td></td> <!-- Blank Column -->
+                                        <td>
+                                            <figure>
+                                                <img src='./images/cat-icon.svg'>
+                                                <figcaption>Cat</figcaption>
+                                            </figure>
+                                        </td>
+                                    </tr>
+                                    <tr></tr> <!-- Blank Row -->
+                                    <tr>
+                                        <td>Tiny</td>
+                                        <td></td> <!-- Blank Column -->
+                                        <td></td> <!-- Blank Column -->
+                                        <td></td> <!-- Blank Column -->
+                                        <td>Small</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Medium</td>
+                                        <td></td> <!-- Blank Column -->
+                                        <td></td> <!-- Blank Column -->
+                                        <td></td> <!-- Blank Column -->
+                                        <td>Large</td>
+                                    </tr>
+                                    <tr></tr> <!-- Blank Row -->
+                                    <tr>
+                                        <td class='strawberry'>Strawberry</td>
+                                        <td></td> <!-- Blank Column -->
+                                        <td></td> <!-- Blank Column -->
+                                        <td></td> <!-- Blank Column -->
+                                        <td class='crazyberry'>Crazyberry</td>
+                                    </tr>
+                                    <tr>
+                                        <td class='blackberry'>Blackberry</td>
+                                        <td></td> <!-- Blank Column -->
+                                        <td></td> <!-- Blank Column -->
+                                        <td></td> <!-- Blank Column -->
+                                        <td class='fire-orange'>Fire Orange</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class='shopping-options'>
+                                <div class='shopping-qty'>
+                                    <label for='quantity'>How many would you like?</label>
+                                    <input type='number' id='quantity' name='quantity' min='1' placeholder='(INPUT QTY)' required>
+                                </div>
+                                <button class='add-to-cart' type='button'>Add to Cart</button>
+                                <button class='buy-now' type='button'>Buy Now!</button>
+                            </div>
+                        </div>
+                    </div>
+                    <a href='products.html' class='explore'>
+                            <img src='./images/products-icon large.svg'>
+                            <h2>Explore Our<br>Products</h2>
+                    </a>
+                </div>
+            </section>
+        </main>
+        <footer>
+            <a href='https://search.creativecommons.org/photos/f1906eec-f5d5-45e9-8330-a1e184c1f968' target='_blank'>"Mountain Lake by traed mawr" by shallowend is licensed under CC BY-NC-SA 2.0</a>
+        </footer>
+    </body>
+</html>
