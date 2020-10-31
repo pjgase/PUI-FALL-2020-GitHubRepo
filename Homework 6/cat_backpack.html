@@ -6,9 +6,9 @@
         <title>Muddy Paws Adventure Gear - Cat Backpack with Astronaut Bubble</title>
         <meta charset='utf-8'/>
         <link href='./style.css' rel='stylesheet' type='text/css'>
-        <!-- Add Link to JS Here -->
+        <script src='./main.js' type='text/javascript'></script>
     </head>
-    <body>
+    <body onload='retrieve_cart()'>
         <header>
             <!-- Navigation Bar -->
             <nav>
@@ -38,9 +38,10 @@
                         </a>
                     </li>
                     <li>
-                        <a href=''>
+                        <a href='./shopping_cart.html' id='cart-icon'>
                             <img class='link-icon' src='./images/shopping-cart-icon small.svg'>
                             <span class='link-text'>Cart</span>
+                            <span id='cart-qty'>0</span>
                         </a>
                     </li>
                 </ul>
@@ -62,7 +63,7 @@
                 <div class='page-subcontent product-page'>
                     <div class='feature'>
                         <div class='product-details item-page'>
-                            <div class='product-description'>
+                            <div class='product-description' id='item' data-name-type='cat-backpack'>
                                 <a href='./cat_backpack.html'>
                                     <img src='./images/cat-backpack.png' alt='Cat Cozy Sack with an Astronaut Bubble for Watching People'>
                                 </a>
@@ -70,7 +71,7 @@
                             <div class='product-options detail-page'>
                                 <table>
                                     <tr>
-                                        <td>
+                                        <td id='dog_option' class='animal_option start' onclick='item.choose_animal(this)' data-animal-type='dog'>
                                             <figure>
                                                 <img src='./images/dog-icon.svg'> 
                                                 <figcaption>Dog</figcaption>
@@ -79,7 +80,7 @@
                                         <td></td> <!-- Blank Column -->
                                         <td></td> <!-- Blank Column -->
                                         <td></td> <!-- Blank Column -->
-                                        <td>
+                                        <td id='cat_option' class='animal_option start' onclick='item.choose_animal(this)' data-animal-type='cat'>
                                             <figure>
                                                 <img src='./images/cat-icon.svg'>
                                                 <figcaption>Cat</figcaption>
@@ -88,33 +89,33 @@
                                     </tr>
                                     <tr></tr> <!-- Blank Row -->
                                     <tr>
-                                        <td>Tiny</td>
+                                        <td id='tiny_option' class='size_option start' onclick='item.choose_size(this)' data-size-type='tiny'>Tiny</td>
                                         <td></td> <!-- Blank Column -->
                                         <td></td> <!-- Blank Column -->
                                         <td></td> <!-- Blank Column -->
-                                        <td>Small</td>
+                                        <td id='small_option' class='size_option start' onclick='item.choose_size(this)' data-size-type='small'>Small</td>
                                     </tr>
                                     <tr>
-                                        <td>Medium</td>
+                                        <td id='medium_option' class='size_option start' onclick='item.choose_size(this)' data-size-type='medium'>Medium</td>
                                         <td></td> <!-- Blank Column -->
                                         <td></td> <!-- Blank Column -->
                                         <td></td> <!-- Blank Column -->
-                                        <td>Large</td>
+                                        <td id='large_option' class='size_option start' onclick='item.choose_size(this)' data-size-type='large'>Large</td>
                                     </tr>
                                     <tr></tr> <!-- Blank Row -->
                                     <tr>
-                                        <td class='strawberry'>Strawberry</td>
+                                        <td id='strawberry' class='color_option start' onclick='item.choose_color(this)' data-color-type='strawberry'>Strawberry</td>
                                         <td></td> <!-- Blank Column -->
                                         <td></td> <!-- Blank Column -->
                                         <td></td> <!-- Blank Column -->
-                                        <td class='crazyberry'>Crazyberry</td>
+                                        <td id='crazyberry' class='color_option start' onclick='item.choose_color(this)' data-color-type='crazyberry'>Crazyberry</td>
                                     </tr>
                                     <tr>
-                                        <td class='blackberry'>Blackberry</td>
+                                        <td id='blackberry' class='color_option start' onclick='item.choose_color(this)' data-color-type='blackberry'>Blackberry</td>
                                         <td></td> <!-- Blank Column -->
                                         <td></td> <!-- Blank Column -->
                                         <td></td> <!-- Blank Column -->
-                                        <td class='fire-orange'>Fire Orange</td>
+                                        <td id='fire-orange' class='color_option start' onclick='item.choose_color(this)' data-color-type='fire-orange'>Fire Orange</td>
                                     </tr>
                                 </table>
                             </div>
@@ -123,7 +124,7 @@
                                     <label for='quantity'>How many would you like?</label>
                                     <input type='number' id='quantity' name='quantity' min='1' placeholder='(INPUT QTY)' required>
                                 </div>
-                                <button class='add-to-cart' type='button'>Add to Cart</button>
+                                <button class='add-to-cart' type='button' onclick='item.choose_quantity(); add_item()'>Add to Cart</button>
                                 <button class='buy-now' type='button'>Buy Now!</button>
                             </div>
                         </div>
