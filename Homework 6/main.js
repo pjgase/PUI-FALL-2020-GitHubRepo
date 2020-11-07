@@ -116,16 +116,16 @@ class Product {
     }
 
     choose_quantity(){
-        this.quantity = document.getElementById('quantity').value;
+        this.quantity = parseInt(document.getElementById('quantity').value);
     }
 
 }
 
 // Initialize Item
-let item = new Product('','','','','');
+var item = new Product('','','','','');
 
-// Get Product Name When HTML for The Page Loads
-window.onload = function() {
+// Function to Retrieve Product Name When Page Loads
+function get_name(){
     window.product_element = document.querySelector('#item');
     if (window.product_element !== null){
         window.product_name = window.product_element.getAttribute('data-name-type');
@@ -133,14 +133,14 @@ window.onload = function() {
     }
 }
 
-// Create Blank Array for Storing Cart Items as They're Added
-let cart_list = [];
+// Create Array for Storing Cart Items as They're Added (Use retrieve_cart() function to pull items previously added)
+var cart_list = retrieve_cart();
 
 // Add to Cart Function
 function add_item() {
     let item = new Product('','','','','');
     
-    item.name = window.product_name;
+    item.load_name(window.product_name);
 
     let animal_list = document.getElementsByClassName('animal_option');
     for (let i=0; i<animal_list.length; i++){
@@ -176,32 +176,86 @@ function add_item() {
     }
     
     if (document.getElementById('quantity').value > 0){
-        item.quantity = document.getElementById('quantity').value;
+        item.quantity = parseInt(document.getElementById('quantity').value);
     }
     else{
         alert('Please select how many you would like :)')
         return;
     }
     
-    alert('You successfully added this item to your shopping cart! This alert will be replaced by a styled overlay for Homework 6B');
-    cart_list.push(item);
-    localStorage.setItem('cart_list', JSON.stringify(cart_list));
-    retrieve_cart();
+    alert('You successfully added this item to your shopping cart! This alert will be replaced by a styled overlay for Homework 6B - let the user know how many of this item are in their cart in total and how many they just added');
+
+    // Check for Previous Items with the Same Options Already in Cart
+    let added_prev = false; 
+    if (cart_list.length > 0){
+        for (let i=0; i<cart_list.length; i++){
+            if (item.name===cart_list[i].name && item.animal===cart_list[i].animal && item.size===cart_list[i].size && item.color===cart_list[i].color){
+                cart_list[i].quantity += item.quantity;
+                added_prev = true;
+            }
+        }
+        if (!added_prev){
+            cart_list.push(item);
+        }
+    }
+    else{
+        cart_list.push(item);
+    }
+    count_cart();
 }
 
-// Cart Functionality is Still Being Developed
+// Update Cart Total Quantity (used in various places)
+function count_cart(){
+    let total_qty = 0;
+    for (i=0; i<cart_list.length; i++){
+        total_qty += cart_list[i].quantity;
+    }
+    // Update Cart Icon in NavBar w/ Styling
+    let cart_qty_elem = document.getElementById('cart-qty');
+    if (total_qty > 0){
+        cart_qty_elem.innerHTML = total_qty;
+        cart_qty_elem.classList.add('cart-qty-visible');
+    }
+    else{
+        cart_qty_elem.innerHTML = '';
+        cart_qty_elem.classList.remove('cart-qty-visible');
+    }
+    return total_qty;
+}
+
+// Store Cart Items (onunload for all HTML pages)
+function store_cart(){
+    localStorage.setItem('cart_list', JSON.stringify(cart_list));
+}
+
+// Retrieve Cart Items (when main.js file runs, cart_list stored in global variable)
 function retrieve_cart(){
-    let stored_items = JSON.parse(localStorage.getItem('cart_list'));
-    //let cart_element = document.createElement('div');
+    cart_list = JSON.parse(localStorage.getItem('cart_list'));
+    return cart_list;
+}
+
+// Display Cart Function (Shopping Cart HTML Page)
+function display_cart(){
+
+}
+
+// Delete Item from Cart
+function delete_item(){
+
+
+    count_cart();
+}
+
+//LEGACY CODE FOR REFERENCE
+
+//let cart_element = document.createElement('div');
     //let cart_item = document.createTextNode('You have added to your cart ' + stored_items.length + ' time(s).');
     //cart_element.appendChild(cart_item);
     //document.getElementById('user-cart').appendChild(cart_element);
     //let cart_icon_qty = document.createTextNode(stored_items.length);
     //let cart_icon = document.createElement('span');
     //cart_icon.appendChild(cart_icon_qty);
-    document.getElementById('cart-qty').innerHTML = stored_items.length;
 
-    
     /*console.log(stored_items)
     console.log('yay')
     for (let i=0; i<stored_items.length; i++){
@@ -210,5 +264,3 @@ function retrieve_cart(){
         cart_element.appendChild(cart_item);
         document.getElementById('user-cart').appendChild(cart_element);
     }*/
-    
-}
