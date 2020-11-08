@@ -8,7 +8,7 @@
         <link href='./style.css' rel='stylesheet' type='text/css'>
         <script src='./main.js' type='text/javascript'></script>
     </head>
-    <body onload='retrieve_cart()'>
+    <body onload='get_name(); count_cart()' onunload='store_cart()'>
         <header>
             <!-- Navigation Bar -->
             <nav>
@@ -38,10 +38,12 @@
                         </a>
                     </li>
                     <li>
-                        <a href='./shopping_cart.html' id='cart-icon'>
-                            <img class='link-icon' src='./images/shopping-cart-icon small.svg'>
+                        <a href='./shopping_cart.html'>
+                            <div class='cart-icon'>
+                                <img class='link-icon' src='./images/shopping-cart-icon small.svg'>
+                                <span id='cart-qty'></span>
+                            </div>
                             <span class='link-text'>Cart</span>
-                            <span id='cart-qty'>0</span>
                         </a>
                     </li>
                 </ul>

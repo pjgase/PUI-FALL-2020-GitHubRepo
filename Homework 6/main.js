@@ -1,4 +1,3 @@
-
 // Create Product Class 
 class Product {
 
@@ -60,7 +59,6 @@ class Product {
                     size_list[j].classList.remove('selected');
                     size_list[j].classList.remove('unselected');
                     size_list[j].classList.add('start');
-                    console.log('hi');
                 }
                 break;
             }
@@ -94,7 +92,6 @@ class Product {
                     color_list[j].classList.remove('selected');
                     color_list[j].classList.remove('unselected');
                     color_list[j].classList.add('start');
-                    console.log('hi');
                 }
                 break;
             }
@@ -116,16 +113,16 @@ class Product {
     }
 
     choose_quantity(){
-        this.quantity = document.getElementById('quantity').value;
+        this.quantity = parseInt(document.getElementById('quantity').value);
     }
 
 }
 
 // Initialize Item
-let item = new Product('','','','','');
+var item = new Product('','','','','');
 
-// Get Product Name When HTML for The Page Loads
-window.onload = function() {
+// Function to Retrieve Product Name When Page Loads
+function get_name(){
     window.product_element = document.querySelector('#item');
     if (window.product_element !== null){
         window.product_name = window.product_element.getAttribute('data-name-type');
@@ -133,14 +130,14 @@ window.onload = function() {
     }
 }
 
-// Create Blank Array for Storing Cart Items as They're Added
-let cart_list = [];
+// Create Array for Storing Cart Items as They're Added (Use retrieve_cart() function to pull items previously added)
+var cart_list = retrieve_cart();
 
 // Add to Cart Function
 function add_item() {
     let item = new Product('','','','','');
     
-    item.name = window.product_name;
+    item.load_name(window.product_name);
 
     let animal_list = document.getElementsByClassName('animal_option');
     for (let i=0; i<animal_list.length; i++){
@@ -176,39 +173,244 @@ function add_item() {
     }
     
     if (document.getElementById('quantity').value > 0){
-        item.quantity = document.getElementById('quantity').value;
+        item.quantity = parseInt(document.getElementById('quantity').value);
     }
     else{
         alert('Please select how many you would like :)')
         return;
     }
     
-    alert('You successfully added this item to your shopping cart! This alert will be replaced by a styled overlay for Homework 6B');
-    cart_list.push(item);
+    alert('You successfully added this item to your shopping cart! This alert will be replaced by a styled overlay for Homework 6B - let the user know how many of this item are in their cart in total and how many they just added');
+
+    // Check for Previous Items with the Same Options Already in Cart
+    let added_prev = false; 
+    if (cart_list.length > 0){
+        for (let i=0; i<cart_list.length; i++){
+            if (item.name===cart_list[i].name && item.animal===cart_list[i].animal && item.size===cart_list[i].size && item.color===cart_list[i].color){
+                cart_list[i].quantity += item.quantity;
+                added_prev = true;
+            }
+        }
+        if (!added_prev){
+            cart_list.push(item);
+        }
+    }
+    else{
+        cart_list.push(item);
+    }
+    count_cart();
+}
+
+// Delete Item from Cart
+function delete_item(delete_elem){
+    let item_elem = delete_elem.parentElement;
+    let item_elem_name = item_elem.getAttribute('data-name-type');
+    let item_elem_animal = item_elem.getAttribute('data-animal-type');
+    let item_elem_size = item_elem.getAttribute('data-size-type');
+    let item_elem_color = item_elem.getAttribute('data-color-type');
+    let item_elem_quantity = parseInt(item_elem.getAttribute('data-quantity-type'));
+    let delete_item = new Product(item_elem_name, item_elem_animal, item_elem_size, item_elem_color, item_elem_quantity);
+    // For Loop to Remove Cart List Items That Match the Item Deleted By User On Cart Page
+    for (let i=0; i<cart_list.length; i++){
+        if (delete_item.name === cart_list[i].name && delete_item.animal === cart_list[i].animal && delete_item.size === cart_list[i].size && delete_item.color === cart_list[i].color && delete_item.quantity === cart_list[i].quantity){
+            cart_list.splice(i,1);
+        }
+    }
+    // Reset Cart Display on Shopping Cart Page
+    let cart_elem = item_elem.parentElement;
+    while (cart_elem.firstChild){
+        cart_elem.removeChild(cart_elem.firstChild);
+    }
+    display_cart();
+
+    count_cart();
+}
+
+// Update Cart Total Quantity (used in various places)
+function count_cart(){
+    let total_qty = 0;
+    for (let i=0; i<cart_list.length; i++){
+        total_qty += cart_list[i].quantity;
+    }
+    // Update Cart Icon in NavBar w/ Styling
+    let cart_qty_elem = document.getElementById('cart-qty');
+    if (total_qty > 0){
+        cart_qty_elem.innerHTML = total_qty;
+        cart_qty_elem.classList.add('cart-qty-visible');
+    }
+    else{
+        cart_qty_elem.innerHTML = '';
+        cart_qty_elem.classList.remove('cart-qty-visible');
+    }
+    return total_qty;
+}
+
+// Store Cart Items (onunload for all HTML pages)
+function store_cart(){
     localStorage.setItem('cart_list', JSON.stringify(cart_list));
-    retrieve_cart();
 }
 
-// Cart Functionality is Still Being Developed
+// Retrieve Cart Items (when main.js file runs, cart_list stored in global variable)
 function retrieve_cart(){
-    let stored_items = JSON.parse(localStorage.getItem('cart_list'));
-    //let cart_element = document.createElement('div');
-    //let cart_item = document.createTextNode('You have added to your cart ' + stored_items.length + ' time(s).');
-    //cart_element.appendChild(cart_item);
-    //document.getElementById('user-cart').appendChild(cart_element);
-    //let cart_icon_qty = document.createTextNode(stored_items.length);
-    //let cart_icon = document.createElement('span');
-    //cart_icon.appendChild(cart_icon_qty);
-    document.getElementById('cart-qty').innerHTML = stored_items.length;
-
-    
-    /*console.log(stored_items)
-    console.log('yay')
-    for (let i=0; i<stored_items.length; i++){
-        let cart_element = document.createElement('div');
-        let cart_item = document.createTextNode(stored_items[i]); // this will need to be changed to format the data in the cart better
-        cart_element.appendChild(cart_item);
-        document.getElementById('user-cart').appendChild(cart_element);
-    }*/
-    
+    cart_list = JSON.parse(localStorage.getItem('cart_list'));
+    return cart_list;
 }
+
+// Display Cart Function (Shopping Cart HTML Page)
+function display_cart(){
+    // Get Parent List Element for Cart
+    let list_parent = document.getElementById('user-cart');
+    for (let i=0; i<cart_list.length; i++){
+        // Create New List Item        
+        let list_child = document.createElement('li');
+        // Set Attributes for List Item (use if cart is edited)
+        list_child.setAttribute('data-name-type', cart_list[i].name);
+        list_child.setAttribute('data-animal-type', cart_list[i].animal);
+        list_child.setAttribute('data-size-type', cart_list[i].size);
+        list_child.setAttribute('data-color-type', cart_list[i].color);
+        list_child.setAttribute('data-quantity-type', cart_list[i].quantity);
+
+        // ANCHOR BOX
+        // Create Item Anchor (Image + Name) Element
+        let item_anchor = document.createElement('a');
+        let item_img = document.createElement('img');
+        if (cart_list[i].name === 'gps-collar'){
+            item_anchor.href = './gps_collar.html';
+            item_img.src = './images/gps-collar.png';
+        }
+        if (cart_list[i].name === 'cat-backpack'){
+            item_anchor.href = './cat_backpack.html';
+            item_img.src = './images/cat-backpack.png';
+        }
+        // HERE: add additional if statements for using the images of the other products
+        item_anchor.appendChild(item_img);
+
+        // ITEM BOX
+        // Create Containers for ITEM BOX
+        let item_container = document.createElement('div');
+        item_container.classList.add('item-container');
+        
+            // ITEM BOX - Title Container
+            let item_title_container = document.createElement('div');
+            // Create Item Name Element
+            let item_name = document.createElement('h3');
+            let item_price = document.createElement('h4');
+            if (cart_list[i].name === 'gps-collar'){
+                item_name.innerHTML = 'Collar with GPS Tracker';
+                item_price.innerHTML = 'Price: $39.99';
+            } 
+            // HERE: add additional if statements for using the images of the other products
+            if (cart_list[i].name === 'cat-backpack'){
+                item_name.innerHTML = 'Cat Backpack';
+                item_price.innerHTML = 'Price: $85.59'; 
+            } 
+            // HERE: add additional if statements for using the images of the other products
+            // Append to Item Title Container
+            item_title_container.appendChild(item_name);
+            item_title_container.appendChild(item_price);
+            item_title_container.classList.add('item-title-container');     
+
+            // ITEM BOX - Details Container
+            let item_details_container = document.createElement('div');
+            item_details_container.classList.add('item-details-container');
+            
+                // ITEM BOX - Details Container - Options Container
+                let item_options_container = document.createElement('div');
+                item_options_container.classList.add('item-options-container');
+                
+                // Create Options Title Element
+                let item_options_title = document.createElement('p');
+                item_options_title.innerHTML = 'Selected Options:';
+                item_options_container.appendChild(item_options_title);
+                
+                // Create Item Options Element (Parent to animal, size, color options)
+                let item_options_selected = document.createElement('div');
+                item_options_selected.classList.add('item-options-selected');
+                // Create Item Animal Element
+                let item_animal = document.createElement('figure');
+                let item_animal_icon = document.createElement('img');
+                let item_animal_name = document.createElement('figcaption');
+                if (cart_list[i].animal === 'dog'){
+                    item_animal_icon.src = './images/dog-icon.svg';
+                    item_animal_name.innerHTML = 'Dog';
+                }
+                else if (cart_list[i].animal === 'cat'){
+                    item_animal_icon.src = './images/cat-icon.svg';
+                    item_animal_name.innerHTML = 'Cat';
+                }
+                item_animal.appendChild(item_animal_icon);
+                item_animal.appendChild(item_animal_name);
+                // Create Item Size Element
+                let item_size = document.createElement('p');
+                if (cart_list[i].size === 'tiny'){
+                    item_size.innerHTML = 'Tiny';
+                }
+                else if (cart_list[i].size === 'small'){
+                    item_size.innerHTML = 'Small';
+                }
+                else if (cart_list[i].size === 'medium'){
+                    item_size.innerHTML = 'Medium';
+                }
+                else if (cart_list[i].size === 'large'){
+                    item_size.innerHTML = 'Large';
+                }
+                // Create Item Color Element
+                let item_color = document.createElement('p');
+                if (cart_list[i].color === 'strawberry'){
+                    item_color.innerHTML = 'Strawberry';
+                    item_color.classList.add('strawberry');
+                }
+                else if (cart_list[i].color === 'crazyberry'){
+                    item_color.innerHTML = 'Crazyberry';
+                    item_color.classList.add('crazyberry');
+                }
+                else if (cart_list[i].color === 'blackberry'){
+                    item_color.innerHTML = 'Blackberry';
+                    item_color.classList.add('blackberry');
+                }
+                else if (cart_list[i].color === 'fire-orange'){
+                    item_color.innerHTML = 'Fire Orange';
+                    item_color.classList.add('fire-orange');
+                }
+                // Append Options
+                item_options_selected.appendChild(item_animal);
+                item_options_selected.appendChild(item_size);
+                item_options_selected.appendChild(item_color);
+                item_options_container.appendChild(item_options_selected);
+
+                // ITEM BOX - Details Container - Quantity Container
+                let item_quantity_container = document.createElement('div');
+                let item_quantity_title = document.createElement('p');
+                item_quantity_title.innerHTML = 'Quantity: ' + cart_list[i].quantity;
+                item_quantity_container.appendChild(item_quantity_title);
+                item_quantity_container.classList.add('item-quantity-container');
+
+            item_details_container.appendChild(item_options_container);
+            item_details_container.appendChild(item_quantity_container);
+
+        item_container.appendChild(item_title_container);
+        item_container.appendChild(item_details_container);
+        
+        // DELETE BOX
+        let item_delete = document.createElement('figure');
+        let item_delete_icon = document.createElement('img');
+        let item_delete_name = document.createElement('figcaption');
+        item_delete_icon.src = './images/trash-icon.svg';
+        item_delete_name.innerHTML = 'Remove';
+        item_delete.appendChild(item_delete_icon);
+        item_delete.appendChild(item_delete_name);
+        item_delete.setAttribute('onclick','delete_item(this)');
+        item_delete.classList.add('item-delete');
+
+        // Append Children Elements to List Item
+        list_child.appendChild(item_anchor);
+        list_child.appendChild(item_container);
+        list_child.appendChild(item_delete);
+
+        // Append List Item to Parent List
+        list_parent.appendChild(list_child);
+    }
+}
+
+// Edit Cart
+
