@@ -184,7 +184,7 @@ function add_item() {
 
     // Check for Previous Items with the Same Options Already in Cart
     let added_prev = false; 
-    if (cart_list.length > 0){
+    if (cart_list && cart_list.length > 0){
         for (let i=0; i<cart_list.length; i++){
             if (item.name===cart_list[i].name && item.animal===cart_list[i].animal && item.size===cart_list[i].size && item.color===cart_list[i].color){
                 cart_list[i].quantity += item.quantity;
