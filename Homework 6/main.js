@@ -146,7 +146,7 @@ function add_item() {
         }
     }
     if (item.animal ===''){
-        alert('Please select what type of pet you would like this for :)')
+        alert('Please select what type of pet you would like this for :) --- NOTE: This alert will eventually be replaced by feedforward info onscreen')
         return;
     }
 
@@ -157,7 +157,7 @@ function add_item() {
         }
     }
     if (item.size === ''){
-        alert('Please select what size you would like :)')
+        alert('Please select what size you would like :) --- NOTE: This alert will eventually be replaced by feedforward info onscreen')
         return;
     }
 
@@ -168,7 +168,7 @@ function add_item() {
         }
     }
     if (item.color === ''){
-        alert('Please select what color you would like :)')
+        alert('Please select what color you would like :) --- NOTE: This alert will eventually be replaced by feedforward info onscreen')
         return;
     }
     
@@ -176,11 +176,11 @@ function add_item() {
         item.quantity = parseInt(document.getElementById('quantity').value);
     }
     else{
-        alert('Please select how many you would like :)')
+        alert('Please select how many you would like :) --- NOTE: This alert will eventually be replaced by feedforward info onscreen')
         return;
     }
     
-    alert('You successfully added this item to your shopping cart! This alert will be replaced by a styled overlay for Homework 6B - let the user know how many of this item are in their cart in total and how many they just added');
+    alert('You successfully added this item to your shopping cart! --- NOTE: This alert will eventually be replaced by an onscreen message indicating how many items were just added to the cart');
 
     // Check for Previous Items with the Same Options Already in Cart
     let added_prev = false; 
@@ -222,29 +222,26 @@ function delete_item(delete_elem){
         cart_elem.removeChild(cart_elem.firstChild);
     }
     display_cart();
-
     count_cart();
 }
 
 // Update Cart Total Quantity (used in various places)
 function count_cart(){
-    if (cart_list.length > 0){
-        let total_qty = 0;
-        for (let i=0; i<cart_list.length; i++){
-            total_qty += cart_list[i].quantity;
-        }
-        // Update Cart Icon in NavBar w/ Styling
-        let cart_qty_elem = document.getElementById('cart-qty');
-        if (total_qty > 0){
-            cart_qty_elem.innerHTML = total_qty;
-            cart_qty_elem.classList.add('cart-qty-visible');
-        }
-        else{
-            cart_qty_elem.innerHTML = '';
-            cart_qty_elem.classList.remove('cart-qty-visible');
-        }
-        return total_qty;
+    let total_qty = 0;
+    for (let i=0; i<cart_list.length; i++){
+        total_qty += cart_list[i].quantity;
     }
+    // Update Cart Icon in NavBar w/ Styling
+    let cart_qty_elem = document.getElementById('cart-qty');
+    if (total_qty > 0){
+        cart_qty_elem.innerHTML = total_qty;
+        cart_qty_elem.classList.add('cart-qty-visible');
+    }
+    else{
+        cart_qty_elem.innerHTML = '';
+        cart_qty_elem.classList.remove('cart-qty-visible');
+    }
+    return total_qty;
 }
 
 // Store Cart Items (onunload for all HTML pages)
