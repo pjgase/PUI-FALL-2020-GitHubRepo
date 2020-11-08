@@ -131,7 +131,7 @@ function get_name(){
 }
 
 // Create Array for Storing Cart Items as They're Added (Use retrieve_cart() function to pull items previously added)
-var cart_list = retrieve_cart();
+var cart_list = retrieve_cart() || [];
 
 // Add to Cart Function
 function add_item() {
@@ -184,7 +184,7 @@ function add_item() {
 
     // Check for Previous Items with the Same Options Already in Cart
     let added_prev = false; 
-    if (cart_list && cart_list.length > 0){
+    if (cart_list.length > 0){
         for (let i=0; i<cart_list.length; i++){
             if (item.name===cart_list[i].name && item.animal===cart_list[i].animal && item.size===cart_list[i].size && item.color===cart_list[i].color){
                 cart_list[i].quantity += item.quantity;
@@ -228,21 +228,23 @@ function delete_item(delete_elem){
 
 // Update Cart Total Quantity (used in various places)
 function count_cart(){
-    let total_qty = 0;
-    for (let i=0; i<cart_list.length; i++){
-        total_qty += cart_list[i].quantity;
+    if (cart_list.length > 0){
+        let total_qty = 0;
+        for (let i=0; i<cart_list.length; i++){
+            total_qty += cart_list[i].quantity;
+        }
+        // Update Cart Icon in NavBar w/ Styling
+        let cart_qty_elem = document.getElementById('cart-qty');
+        if (total_qty > 0){
+            cart_qty_elem.innerHTML = total_qty;
+            cart_qty_elem.classList.add('cart-qty-visible');
+        }
+        else{
+            cart_qty_elem.innerHTML = '';
+            cart_qty_elem.classList.remove('cart-qty-visible');
+        }
+        return total_qty;
     }
-    // Update Cart Icon in NavBar w/ Styling
-    let cart_qty_elem = document.getElementById('cart-qty');
-    if (total_qty > 0){
-        cart_qty_elem.innerHTML = total_qty;
-        cart_qty_elem.classList.add('cart-qty-visible');
-    }
-    else{
-        cart_qty_elem.innerHTML = '';
-        cart_qty_elem.classList.remove('cart-qty-visible');
-    }
-    return total_qty;
 }
 
 // Store Cart Items (onunload for all HTML pages)
