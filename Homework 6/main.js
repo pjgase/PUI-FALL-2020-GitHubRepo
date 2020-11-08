@@ -1,4 +1,3 @@
-
 // Create Product Class 
 class Product {
 
@@ -60,7 +59,6 @@ class Product {
                     size_list[j].classList.remove('selected');
                     size_list[j].classList.remove('unselected');
                     size_list[j].classList.add('start');
-                    console.log('hi');
                 }
                 break;
             }
@@ -94,7 +92,6 @@ class Product {
                     color_list[j].classList.remove('selected');
                     color_list[j].classList.remove('unselected');
                     color_list[j].classList.add('start');
-                    console.log('hi');
                 }
                 break;
             }
@@ -204,10 +201,35 @@ function add_item() {
     count_cart();
 }
 
+// Delete Item from Cart
+function delete_item(delete_elem){
+    let item_elem = delete_elem.parentElement;
+    let item_elem_name = item_elem.getAttribute('data-name-type');
+    let item_elem_animal = item_elem.getAttribute('data-animal-type');
+    let item_elem_size = item_elem.getAttribute('data-size-type');
+    let item_elem_color = item_elem.getAttribute('data-color-type');
+    let item_elem_quantity = parseInt(item_elem.getAttribute('data-quantity-type'));
+    let delete_item = new Product(item_elem_name, item_elem_animal, item_elem_size, item_elem_color, item_elem_quantity);
+    // For Loop to Remove Cart List Items That Match the Item Deleted By User On Cart Page
+    for (let i=0; i<cart_list.length; i++){
+        if (delete_item.name === cart_list[i].name && delete_item.animal === cart_list[i].animal && delete_item.size === cart_list[i].size && delete_item.color === cart_list[i].color && delete_item.quantity === cart_list[i].quantity){
+            cart_list.splice(i,1);
+        }
+    }
+    // Reset Cart Display on Shopping Cart Page
+    let cart_elem = item_elem.parentElement;
+    while (cart_elem.firstChild){
+        cart_elem.removeChild(cart_elem.firstChild);
+    }
+    display_cart();
+
+    count_cart();
+}
+
 // Update Cart Total Quantity (used in various places)
 function count_cart(){
     let total_qty = 0;
-    for (i=0; i<cart_list.length; i++){
+    for (let i=0; i<cart_list.length; i++){
         total_qty += cart_list[i].quantity;
     }
     // Update Cart Icon in NavBar w/ Styling
@@ -236,31 +258,159 @@ function retrieve_cart(){
 
 // Display Cart Function (Shopping Cart HTML Page)
 function display_cart(){
+    // Get Parent List Element for Cart
+    let list_parent = document.getElementById('user-cart');
+    for (let i=0; i<cart_list.length; i++){
+        // Create New List Item        
+        let list_child = document.createElement('li');
+        // Set Attributes for List Item (use if cart is edited)
+        list_child.setAttribute('data-name-type', cart_list[i].name);
+        list_child.setAttribute('data-animal-type', cart_list[i].animal);
+        list_child.setAttribute('data-size-type', cart_list[i].size);
+        list_child.setAttribute('data-color-type', cart_list[i].color);
+        list_child.setAttribute('data-quantity-type', cart_list[i].quantity);
 
+        // ANCHOR BOX
+        // Create Item Anchor (Image + Name) Element
+        let item_anchor = document.createElement('a');
+        let item_img = document.createElement('img');
+        if (cart_list[i].name === 'gps-collar'){
+            item_anchor.href = './gps_collar.html';
+            item_img.src = './images/gps-collar.png';
+        }
+        if (cart_list[i].name === 'cat-backpack'){
+            item_anchor.href = './cat_backpack.html';
+            item_img.src = './images/cat-backpack.png';
+        }
+        // HERE: add additional if statements for using the images of the other products
+        item_anchor.appendChild(item_img);
+
+        // ITEM BOX
+        // Create Containers for ITEM BOX
+        let item_container = document.createElement('div');
+        item_container.classList.add('item-container');
+        
+            // ITEM BOX - Title Container
+            let item_title_container = document.createElement('div');
+            // Create Item Name Element
+            let item_name = document.createElement('h3');
+            let item_price = document.createElement('h4');
+            if (cart_list[i].name === 'gps-collar'){
+                item_name.innerHTML = 'Collar with GPS Tracker';
+                item_price.innerHTML = 'Price: $39.99';
+            } 
+            // HERE: add additional if statements for using the images of the other products
+            if (cart_list[i].name === 'cat-backpack'){
+                item_name.innerHTML = 'Cat Backpack';
+                item_price.innerHTML = 'Price: $85.59'; 
+            } 
+            // HERE: add additional if statements for using the images of the other products
+            // Append to Item Title Container
+            item_title_container.appendChild(item_name);
+            item_title_container.appendChild(item_price);
+            item_title_container.classList.add('item-title-container');     
+
+            // ITEM BOX - Details Container
+            let item_details_container = document.createElement('div');
+            item_details_container.classList.add('item-details-container');
+            
+                // ITEM BOX - Details Container - Options Container
+                let item_options_container = document.createElement('div');
+                item_options_container.classList.add('item-options-container');
+                
+                // Create Options Title Element
+                let item_options_title = document.createElement('p');
+                item_options_title.innerHTML = 'Selected Options:';
+                item_options_container.appendChild(item_options_title);
+                
+                // Create Item Options Element (Parent to animal, size, color options)
+                let item_options_selected = document.createElement('div');
+                item_options_selected.classList.add('item-options-selected');
+                // Create Item Animal Element
+                let item_animal = document.createElement('figure');
+                let item_animal_icon = document.createElement('img');
+                let item_animal_name = document.createElement('figcaption');
+                if (cart_list[i].animal === 'dog'){
+                    item_animal_icon.src = './images/dog-icon.svg';
+                    item_animal_name.innerHTML = 'Dog';
+                }
+                else if (cart_list[i].animal === 'cat'){
+                    item_animal_icon.src = './images/cat-icon.svg';
+                    item_animal_name.innerHTML = 'Cat';
+                }
+                item_animal.appendChild(item_animal_icon);
+                item_animal.appendChild(item_animal_name);
+                // Create Item Size Element
+                let item_size = document.createElement('p');
+                if (cart_list[i].size === 'tiny'){
+                    item_size.innerHTML = 'Tiny';
+                }
+                else if (cart_list[i].size === 'small'){
+                    item_size.innerHTML = 'Small';
+                }
+                else if (cart_list[i].size === 'medium'){
+                    item_size.innerHTML = 'Medium';
+                }
+                else if (cart_list[i].size === 'large'){
+                    item_size.innerHTML = 'Large';
+                }
+                // Create Item Color Element
+                let item_color = document.createElement('p');
+                if (cart_list[i].color === 'strawberry'){
+                    item_color.innerHTML = 'Strawberry';
+                    item_color.classList.add('strawberry');
+                }
+                else if (cart_list[i].color === 'crazyberry'){
+                    item_color.innerHTML = 'Crazyberry';
+                    item_color.classList.add('crazyberry');
+                }
+                else if (cart_list[i].color === 'blackberry'){
+                    item_color.innerHTML = 'Blackberry';
+                    item_color.classList.add('blackberry');
+                }
+                else if (cart_list[i].color === 'fire-orange'){
+                    item_color.innerHTML = 'Fire Orange';
+                    item_color.classList.add('fire-orange');
+                }
+                // Append Options
+                item_options_selected.appendChild(item_animal);
+                item_options_selected.appendChild(item_size);
+                item_options_selected.appendChild(item_color);
+                item_options_container.appendChild(item_options_selected);
+
+                // ITEM BOX - Details Container - Quantity Container
+                let item_quantity_container = document.createElement('div');
+                let item_quantity_title = document.createElement('p');
+                item_quantity_title.innerHTML = 'Quantity: ' + cart_list[i].quantity;
+                item_quantity_container.appendChild(item_quantity_title);
+                item_quantity_container.classList.add('item-quantity-container');
+
+            item_details_container.appendChild(item_options_container);
+            item_details_container.appendChild(item_quantity_container);
+
+        item_container.appendChild(item_title_container);
+        item_container.appendChild(item_details_container);
+        
+        // DELETE BOX
+        let item_delete = document.createElement('figure');
+        let item_delete_icon = document.createElement('img');
+        let item_delete_name = document.createElement('figcaption');
+        item_delete_icon.src = './images/trash-icon.svg';
+        item_delete_name.innerHTML = 'Remove';
+        item_delete.appendChild(item_delete_icon);
+        item_delete.appendChild(item_delete_name);
+        item_delete.setAttribute('onclick','delete_item(this)');
+        item_delete.classList.add('item-delete');
+
+        // Append Children Elements to List Item
+        list_child.appendChild(item_anchor);
+        list_child.appendChild(item_container);
+        list_child.appendChild(item_delete);
+
+        // Append List Item to Parent List
+        list_parent.appendChild(list_child);
+    }
 }
 
-// Delete Item from Cart
-function delete_item(){
+// Edit Cart
 
-
-    count_cart();
-}
-
-//LEGACY CODE FOR REFERENCE
-
-//let cart_element = document.createElement('div');
-    //let cart_item = document.createTextNode('You have added to your cart ' + stored_items.length + ' time(s).');
-    //cart_element.appendChild(cart_item);
-    //document.getElementById('user-cart').appendChild(cart_element);
-    //let cart_icon_qty = document.createTextNode(stored_items.length);
-    //let cart_icon = document.createElement('span');
-    //cart_icon.appendChild(cart_icon_qty);
-
-    /*console.log(stored_items)
-    console.log('yay')
-    for (let i=0; i<stored_items.length; i++){
-        let cart_element = document.createElement('div');
-        let cart_item = document.createTextNode(stored_items[i]); // this will need to be changed to format the data in the cart better
-        cart_element.appendChild(cart_item);
-        document.getElementById('user-cart').appendChild(cart_element);
-    }*/
